@@ -2,13 +2,15 @@
 
 import { FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AiOutlineEdit, AiOutlineCalendar } from 'react-icons/ai';
+import { AiOutlineEdit, AiOutlineArrowRight } from 'react-icons/ai';
 import { IoTrashBinOutline } from 'react-icons/io5';
 import DatePicker from 'react-datepicker';
 import { ITravel } from "@/types/travels";
-import { deleteTravel, editTravel } from "@/api";
+import { deleteTravel, editTravel, findBuddy } from "@/api";
 import Modal from "./Modal";
 import dayjs from "dayjs";
+import { BsSearchHeart } from "react-icons/bs";
+
 
 interface TravelProps {
     Travel: ITravel
@@ -19,6 +21,7 @@ const Travel: React.FC<TravelProps> = ({ Travel }) => {
   const router = useRouter();
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
+  const [openModalBuddy, setOpenModalBuddy] = useState<boolean>(false);
   const [nameToEdit, setNameToEdit] = useState<string>(Travel.name);
   const [genderToEdit, setGenderToEdit] = useState<string>(Travel.gender);
   const [languageToEdit, setLanguageToEdit] = useState<string>(Travel.language);
@@ -27,6 +30,7 @@ const Travel: React.FC<TravelProps> = ({ Travel }) => {
   const [toToEdit, setToToEdit] = useState<string>(Travel.to);
   const [fromDateToEdit, setFromDateToEdit] = useState<Date | null>(Travel.from_date);
   const [toDateToEdit, setToDateToEdit] = useState<Date | null>(Travel.to_date);
+  const [buddyResult, setBuddyResult] = useState<string>('???');
 
   const handleEditTravelSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -49,6 +53,11 @@ const Travel: React.FC<TravelProps> = ({ Travel }) => {
     await deleteTravel(id);
     setOpenModalDelete(false);
     router.refresh();
+  }
+  const handleFindBuddy = async (id:string) => {
+    const bud = await findBuddy(id);
+    setBuddyResult(bud.name);
+    setOpenModalBuddy(true);
   }
 
   const setDate = (date: Date | null) => {
@@ -78,20 +87,22 @@ const Travel: React.FC<TravelProps> = ({ Travel }) => {
         <td className="flex gap-5">
           <AiOutlineEdit onClick={() => setOpenModalEdit(true)} cursor="pointer" size="20" />
           <Modal modalOpen={openModalEdit} setModalOpen={setOpenModalEdit}>
-            <form onSubmit={e => handleEditTravelSubmit(e)}>
-              <h3>Edit Travel</h3>
-
+            <form  className="flex flex-col gap-3" onSubmit={e => handleEditTravelSubmit(e)}>
+              <h3 className="font-bold text-2xl">Edit Travel</h3>
               <div className="form-control w-full">
-                <div className="flex gap-5">            
-                  <input 
+                <input 
                     type="text" 
                     value={nameToEdit} 
                     onChange={e => setNameToEdit(e.target.value)}
                     placeholder="Enter name" 
                     className="input input-bordered w-full max-w-xs" 
                   />
+              </div>
+              <div className="form-control">
+                <div className="input-group">
+                <input type="string" value={ageToEdit} onChange={e => setAgeToEdit((e.target.value))} className="input input-bordered w-28"  />
 
-                  <select value={genderToEdit} onChange={e => setGenderToEdit(e.target.value)} className="select select-bordered">
+                <select value={genderToEdit} onChange={e => setGenderToEdit(e.target.value)} className="select select-bordered ml-3 rounded mr-3">
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                   </select>
@@ -100,24 +111,18 @@ const Travel: React.FC<TravelProps> = ({ Travel }) => {
                     <option value="English">English</option>
                     <option value="Tamil">Tamil</option>
                   </select>
-
-                </div>
-              </div>
-
-              <div className="form-control">
-                <div className="input-group">
-                <span>Qty</span>
-                  <input type="string" value={ageToEdit} onChange={e => setAgeToEdit((e.target.value))} className="input input-bordered w-28" />
                 </div>
               </div>
 
               <div className="form-control w-full">
-                <div className="input-group">
-                  <select value={fromToEdit} onChange={e => setFromToEdit(e.target.value)} className="select select-bordered">
+                <div className="input-control gap-3 flex flex-row">
+                <select value={fromToEdit} onChange={e => setFromToEdit(e.target.value)} className="select select-bordered">
                     <option value="Kochi">Kochi</option>
                     <option value="Delhi">Delhi</option>
                     <option value="Shimla">Shimla</option>
                   </select>
+
+                  <AiOutlineArrowRight className='ml-3 mt-4 mr-3 text-xl'  />
 
                   <select value={toToEdit} onChange={e => setToToEdit(e.target.value)} className="select select-bordered">
                   <option value="Kochi">Kochi</option>
@@ -125,40 +130,28 @@ const Travel: React.FC<TravelProps> = ({ Travel }) => {
                   <option value="Shimla">Shimla</option>
                   </select>
                 </div>
+              </div>
 
-                <div className="input-group">
-                    <span className=" btn-square">
-                      <AiOutlineCalendar />
-                    </span>
-                    <DatePicker 
+              <div className="form-control w-full">
+                <div className="input-group flex flex-row">
+                  <DatePicker 
                       selected={setDate(fromDateToEdit)} 
                       onChange={(date) => setFromDateToEdit(date)} 
                       showYearDropdown
-                      maxDate = {new Date()}
                       className="input input-bordered w-44"  
                     />
-                  </div>
-
-                  <div className="input-group">
-                    <span className=" btn-square">
-                      <AiOutlineCalendar />
-                    </span>
-                    <DatePicker 
+                  <AiOutlineArrowRight className='-ml-7 mt-1 mr-6 text-4xl'  />
+                  <DatePicker 
                       selected={setDate(toDateToEdit)} 
                       onChange={(date) => setToDateToEdit(date)} 
                       showYearDropdown
-                      maxDate = {new Date()}
                       className="input input-bordered w-44"  
                     />
-                  </div>
                 </div>
+              </div>
+
               <div className="modal-action">
-                <button 
-                  className='btn'
-                  type="submit"
-                >
-                  Submit
-                </button>
+                <button className='btn' type="submit"> Submit </button>
               </div>
             </form>
           </Modal>
@@ -181,6 +174,25 @@ const Travel: React.FC<TravelProps> = ({ Travel }) => {
                   Yes!, Delete this Record
                 </button>
               </div>
+          </Modal>
+          <BsSearchHeart onClick={() => handleFindBuddy(Travel.id)} cursor="pointer" size="20"/>
+          <Modal modalOpen={openModalBuddy} setModalOpen={setOpenModalBuddy}>
+          <div className="alert shadow-lg">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info flex-shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span>Your buddy for this journey is {buddyResult}</span>
+              {/* <button 
+                  onClick={() => handleFindBuddy(Travel.id)}
+                  className='btn'
+                  type="submit"
+                ></button> */}
+            </div>
+            
+          </div>
+          <div className="modal-action"> 
+              {/* <button className="btn btn-sm btn-ghost" onClick={() =>setOpenModalBuddy(false)}>Deny</button> */}
+              <button className="btn btn-sm btn-primary" onClick={() =>setOpenModalBuddy(false)}>Accept</button>
+            </div>
           </Modal>
         </td>
     </tr>

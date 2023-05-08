@@ -53,7 +53,7 @@ const AddTravel = () => {
 
       <Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
         <form className="flex flex-col gap-3" onSubmit={e => handleNewTravelSubmit(e)}>
-          <h3>Add New Travel</h3>
+          <h3 className="font-bold text-2xl">Add New Travel</h3>
           <div className="form-control w-full">
             <input type="text" value={name} placeholder="Enter name" className="input input-bordered w-full max-w-xs" onChange={e => setName((e.target.value))}/>
           </div>
