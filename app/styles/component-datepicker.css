@@ -1,0 +1,6 @@
+@import url('../../node_modules/react-datepicker/dist/react-datepicker.css');
+/* overwrite for date-picker */
+.input-group .react-datepicker :where(span) {
+  background: inherit;
+  padding: 0rem;
+}
