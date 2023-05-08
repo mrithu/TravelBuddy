@@ -1,0 +1,26 @@
+{
+  "Travels": [
+    {
+      "id": "6305cbce-f0cb-4e16-b7cc-04b0bd3e88f3",
+      "name": "Jake Gyllenhall",
+      "gender": "Male",
+      "language": "English",
+      "age": "25",
+      "from": "Kochi",
+      "to": "Delhi",
+      "from_date": "2023-05-01T14:37:46.000Z",
+      "to_date": "2023-05-03T14:37:46.000Z"
+    },
+    {
+      "id": "60f66154-84f2-474c-afe8-2c1da74907d8",
+      "name": "Emma Stone",
+      "gender": "Female",
+      "language": "English",
+      "age": "26",
+      "from": "Delhi",
+      "to": "Kochi",
+      "from_date": "2023-04-30T14:42:06.000Z",
+      "to_date": "2023-05-19T14:42:06.000Z"
+    }
+  ]
+}
