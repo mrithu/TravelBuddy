@@ -1,58 +1,77 @@
 'use client'
 
-import { Formik, Field, Form, FormikHelpers } from 'formik';
+// import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useRouter, redirect } from 'next/navigation';
+import { useEffect } from 'react';
+import * as Yup from 'yup';
+import Link from "next/link";
+// import { useHistory, BrowserRouter as Router } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+// import Router from 'next/router';
 
-interface Values {
-    username: string;
-    name: string;
-    password: string;
-}
 
-export default function SignUpForm() {
-    return (
-      <div>
-        <h1 className="display-6 mb-3">Login</h1>
-        <Formik
-          initialValues={{
-            username: '',
-            name: '',
-            password: '',
-          }}
+type User = {
+  username: string;
+  password: string;
+};
 
-          onSubmit={(
-            values: Values,
-            { setSubmitting }: FormikHelpers<Values>
-          ) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 3));
-              setSubmitting(false);
-            }, 500);
-          }}
+const validationSchema = Yup.object().shape({
+  username: Yup.string().required('Username is required'),
+  password: Yup.string().required('Password is required'),
+});
 
-        >
-          <Form>
-            <div className="mb-3">
-              <Field className="form-control" id="username" name="username" placeholder="Username" aria-describedby="usernameHelp" />
-            </div>
 
-            <div className="mb-3">
-              <Field className="form-control" id="name" name="name" placeholder="Name" />
-            </div>
+const initialValues = {
+  username: '',
+  password: ''
+};
+
+const SignUpForm: React.FC = () => {
+  //
+  const  { push } = useRouter();
+
+  // const doNothing = (values: User) =>{
+
+  // }
+
+  const redirectSuccess = () => {
+    // redirect('/Travel');
+    useEffect(() =>{
+        push('/Travel');
+      }, []);
+  }
   
-            <div className="mb-3">
-              <Field className="form-control" id="password" name="password" placeholder="Password" type="password" />
-            </div>
 
-            <button type="submit" className="btn btn-primary">Sign Up</button>
-            <p> </p>
-            <div className='mt-3'>
-              <p>Already have an account? 
-                <a href="#" className='text-blue-600'> Login </a>
-              </p>
-            </div>
-            
-          </Form>
-        </Formik>
-      </div>
-    );
-  };
+  return (
+
+    <form className="flex flex-col gap-3">
+        <div className="form-control w-full max-w-xs">
+            <label className="label">
+                <span className="label-text">Username</span>
+            </label>
+            <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+        </div>
+
+
+        <div className="form-control w-full max-w-xs">
+            <label className="label">
+                <span className="label-text">Set Password</span>
+            </label>
+            <input type="password" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+        </div>
+
+        <div className="flex ">
+        <Link className="btn btn-primary" href="/Travel">Sign Up</Link>
+        </div>
+        <p>Already have an account? </p>
+        <Link className="text-blue-600" href="/Login">Login now!</Link>
+      </form>
+
+  );
+
+
+function lume(arg0: { location: URL; }) {
+  throw new Error('Signup function not implemented.');
+}
+}
+export default SignUpForm;
