@@ -99,7 +99,7 @@ const LoginForm: React.FC = () => {
         <Link className="btn btn-primary" href="/Travel">Login</Link>
         </div>
         <p>Don't have an account? </p>
-        <div className='color-blue-600'>Create now!</div>
+        <Link className="text-blue-600" href="/SignUp">Create now!</Link>
       </form>
 
       // <Formik
